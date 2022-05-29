@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function rawid {
+    rawid=`source $opnDirPath/database/rawid "${username}"`
+}
+
+function updatedb {
+curl -s -X 'DELETE' \
+  'https://g8930d9ac19f7a5-opendirectory.adb.ap-hyderabad-1.oraclecloudapps.com/ords/admin/user_data/'${rawid}'' \
+  -H 'accept: application/json'
+
+echo "\nReturn Code: $?"
+
+}
+
+##########################################################################################################
+
+username="$1"
+triggeredfrom="$2"
+
+configs
+rawid
+updatedb >> ${logs_dir}/database-${triggeredfrom}-`date "+%Y%m%d%H%M"`.log

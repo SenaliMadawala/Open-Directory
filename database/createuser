@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function updatedb {
+curl -s -X 'POST' \
+  'https://g8930d9ac19f7a5-opendirectory.adb.ap-hyderabad-1.oraclecloudapps.com/ords/admin/user_data/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "username": "'${username}'",
+  "department": "'${department}'",
+  "usergroups": "'${usergroups}'"
+}'
+
+echo "\nReturn Code: $?"
+
+}
+
+##########################################################################################################
+
+username="$1"
+department="$2"
+usergroups="$3"
+triggeredfrom="$4"
+
+configs
+updatedb >> ${logs_dir}/database-${triggeredfrom}-`date "+%Y%m%d%H%M"`.log

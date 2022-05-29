@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function getall {
+    curl -s --location \
+    'https://g8930d9ac19f7a5-opendirectory.adb.ap-hyderabad-1.oraclecloudapps.com/ords/admin/user_data/' > ${temp_dir}/alluser.json
+}
+
+function rawid {
+    arrayid=$((`jq '.items' ${opnDirPath}/tmp/alluser.json | jq '.[].username' | grep -nw "${userName}" | cut -f1 -d:`-1))
+    jq '.items' ${temp_dir}/alluser.json | jq '.['${arrayid}'].links' | jq '.[].href' | awk -F/ '{print $NF}' | sed 's/\"//'
+}
+
+##########################################################################################################
+
+userName=$1
+
+configs
+getall
+rawid

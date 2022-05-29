@@ -1,0 +1,6 @@
+- name: Run meta playbook
+  import_playbook: meta.yml
+
+- name: Run department playbook
+  import_playbook: department.yml
+      

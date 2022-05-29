@@ -1,0 +1,35 @@
+#!/bin/bash
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function rawid {
+    rawid=`source $opnDirPath/database/rawid "${userName}"`
+}
+
+function viewdetails {
+    item=$1
+    result=`curl -s -X 'GET' \
+    'https://g8930d9ac19f7a5-opendirectory.adb.ap-hyderabad-1.oraclecloudapps.com/ords/admin/user_data/'${rawid}'' \
+    -H 'accept: application/json' | \
+    jq ' .'${item}''`
+
+    echo -e "${item}: ${result}\n"
+}
+
+##########################################################################################################
+
+userName=$1
+
+configs
+rawid
+
+tput cup 7 12
+viewdetails username
+
+tput cup 8 12
+viewdetails department
+
+tput cup 9 12
+viewdetails usergroups

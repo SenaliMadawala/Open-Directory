@@ -1,0 +1,55 @@
+---
+
+  - name: preparing env
+    hosts: "{{ nodes }}"
+    tasks:
+      - name: Configuring metadata
+        copy:
+          src: roles/common/files/ascii
+          dest: /opt/opendirectory/
+          mode: 0644
+      
+      - name: Performing system wide changes
+        copy:
+          src: roles/common/files/opendirectory_usermeta
+          dest: /usr/bin
+          mode: 0755
+    tags: [ createuser ]
+  
+  
+  - name: Create User
+    hosts: "{{ nodes }}"
+    tasks:      
+      - name: create user - "{{ uusername }}"
+        user:
+          name: "{{ uusername }}"
+          shell: /usr/bin/opendirectory_usermeta
+          generate_ssh_key: yes
+          ssh_key_bits: 2048
+          ssh_key_file: .ssh/id_rsa
+          groups: "{{ ugroups }}"
+          append: yes
+          create_home: True
+          home: /home/{{ uusername }}
+          password: "{{ userpwd | password_hash('sha512') }}"
+
+      - name: copy bashrc
+        copy:
+          src: ~/.bashrc
+          dest: /home/{{ uusername }}/.bashrc
+          owner: "{{ uusername }}"
+          group: "{{ uusername }}"
+          mode: 0644
+    tags: [ createuser, updateuser ]
+
+
+  - name: Remove user
+    hosts: "{{ nodes }}"
+    tasks:      
+      - name: remove user - "{{ uusername }}"
+        user:
+          name: "{{ uusername }}"
+          state: absent
+          remove: yes
+          force: True
+    tags: [ removeuser ]

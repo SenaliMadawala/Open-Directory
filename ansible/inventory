@@ -1,0 +1,7 @@
+[devops]
+devops_server1 ansible_host=152.70.71.168 ansible_user=root
+
+
+
+[dev]
+#dev_server1

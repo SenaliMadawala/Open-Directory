@@ -1,0 +1,31 @@
+#!/bin/bash
+
+function header {
+    source $opnDirPath/header "${OpnDirVersion}" "${heading}"
+}
+
+function refreshScreen {
+    tput clear
+    header
+}
+
+function userInputs {
+    refreshScreen
+    tput cup 7 10
+    read -p "Enter user name: " userName
+
+}
+
+function viewuser {
+    refreshScreen
+    source $opnDirPath/database/${scriptname} "${userName}"
+}
+
+##########################################################################################################
+
+heading="V I E W - U S E R"
+scriptname=`basename -- "$0"`
+
+header
+userInputs
+viewuser

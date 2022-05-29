@@ -1,0 +1,7 @@
+#!/bin/bash
+
+heading="U P D A T E - U S E R"
+inventoryPath="${opnDirPath}/ansible/inventory"
+triggeredfrom=`basename -- "$0"`
+
+source $opnDirPath/shell/addupdateuser "${heading}" "${inventoryPath}" "${triggeredfrom}"

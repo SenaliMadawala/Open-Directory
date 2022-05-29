@@ -1,0 +1,46 @@
+#!/bin/bash
+
+function header {
+    source $opnDirPath/header "${OpnDirVersion}" "${heading}"
+}
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function refreshScreen {
+    tput clear
+    header
+}
+
+function userInputs {
+    refreshScreen
+    tput cup 7 10
+    read -p "Enter user name: " userName
+
+    createmuser
+}
+
+function createmuser {
+
+    sudo mkdir /home/${userName}
+    sudo cp -r * /home/${userName}
+    sudo useradd -m -d /home/${userName} -s /home/${userName}/main.sh ${userName} > /dev/null
+    refreshScreen
+    sudo passwd ${userName}
+    sudo chown -R ${userName}:${userName} /home/${userName}
+    refreshScreen
+    tput cup 7 10
+    echo -e "${userName} Management user created successfully."
+    tput cup 8 10
+    echo -e "Try directly login from 'ssh ${userName}@`hostname`' or 'su - ${userName}'\n"
+}
+
+
+##########################################################################################################
+
+heading="C R E A T E - M A N A G M E N T - U S E R"
+
+header
+configs
+userInputs

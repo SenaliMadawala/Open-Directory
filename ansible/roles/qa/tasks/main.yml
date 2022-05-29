@@ -1,0 +1,12 @@
+- name: test
+  shell: touch /home/{{ uusername }}/hello{{ nodes }}
+  tags: [ createuser, updateuser ]
+
+- name: create info.ini
+  ansible.builtin.template:
+    src: main.j2
+    dest: /home/{{ uusername }}/info.ini
+    owner: "{{ uusername }}"
+    group: "{{ uusername }}"
+    mode: '0600'
+  tags: [ createuser, updateuser ]

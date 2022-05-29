@@ -1,0 +1,70 @@
+#!/bin/bash
+
+function header {
+    source $opnDirPath/header "${OpnDirVersion}" "${heading}"
+}
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function refreshScreen {
+    tput clear
+    header
+}
+
+function userInputs {
+    refreshScreen
+    tput cup 7 10
+    read -p "Enter user name: " userName
+
+    tput cup 8 10
+    read -p "Department Name: " departmentName
+
+    userConfirmation
+}
+
+function userConfirmation {
+    refreshScreen
+    tput cup 7 10
+    echo "User Name: ${userName}"
+
+    tput cup 8 10
+    echo "Department Name: ${departmentName}"
+
+    tput cup 10 10
+    tput bold
+    tput setaf 1
+    read -n 1 -p "Are you sure want to continue? [y/n] " choice
+    tput sgr0
+    
+    if [[ $choice == "y" ]] ; then
+        removeuser
+    elif [[ $choice == "n" ]] ; then
+        userInputs
+    fi
+}
+
+function removeuser {
+    cd ${opnDirPath}/ansible
+    ansible-playbook -i inventory main.yml -vv \
+        --extra-vars "nodes=${departmentName}" \
+        --extra-vars "uusername=${userName}" \
+        --tags removeuser >> ${logs_dir}/ansible-removeuser-`date "+%Y%m%d%H%M"`.log
+    cd ${opnDirPath}
+}
+
+function updatedb {
+    source $opnDirPath/database/${triggeredfrom} "${userName}" "${triggeredfrom}"
+}
+
+##########################################################################################################
+
+heading="R E M O V E - U S E R"
+inventoryPath="${opnDirPath}/ansible/inventory"
+triggeredfrom=`basename -- "$0"`
+
+header
+configs
+userInputs
+updatedb

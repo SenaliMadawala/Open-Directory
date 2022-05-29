@@ -1,0 +1,132 @@
+#!/bin/bash
+
+function header {
+    source $opnDirPath/header "${OpnDirVersion}" "${heading}"
+}
+
+function configs {
+    source $opnDirPath/configs
+}
+
+function refreshScreen {
+    tput clear
+    header
+}
+
+function department {
+    while IFS= read -r line; do
+        if [[ "$line" == "["* ]]; then
+            printf '%s ' "$line"
+        fi
+    done < $inventoryPath
+}
+
+function password {
+    refreshScreen
+    tput cup 7 10
+    echo "1. Generate A Random Password"
+    
+    tput cup 8 10
+    echo "2. Enter Own Password"
+
+    tput bold
+    tput cup 10 10
+    read -p "Enter your choice [1-2] " choice
+    
+    if [[ $choice == 1 ]] ; then
+        refreshScreen
+        userPassword=`date +%s | sha256sum | base64 | head -c 15 ; echo`
+        tput cup 7 5
+        echo "'${userPassword}' is your generated password."
+        tput bold
+        tput cup 8 5
+        tput blink
+        tput setaf 1
+        echo " You may not able to view the password later"
+        tput sgr0
+        
+        tput cup 10 5
+        read -n 1 -p "Press any key to continue"
+
+    elif [[ $choice == 2 ]] ; then
+        refreshScreen
+        tput cup 7 10
+        read -p "Enter new password: " userPassword
+    fi
+}
+
+function userInputs {
+    tput cup 7 10
+    echo -n "Enter the department name " 
+    department
+    read -p ": " departmentName
+
+    refreshScreen
+    tput cup 7 10
+    read -p "Enter user name: " userName
+
+    refreshScreen
+    tput cup 7 10
+    read -p "Enter group names (Coma seperated): " groupNames
+
+    password
+}
+
+function userConfirmation {
+    refreshScreen
+    tput cup 7 10
+    echo "User Name: ${userName}"
+
+    tput cup 8 10
+    echo "Department Name: ${departmentName}"
+
+    tput cup 9 10
+    echo "Enter group names: ${groupNames}"
+
+    tput cup 11 10
+    tput bold
+    tput setaf 1
+    read -n 1 -p "Are you sure want to continue? [y/n] " choice
+    tput sgr0
+    
+    if [[ $choice == "y" ]] ; then
+        adduser >> ${logs_dir}/ansible-${triggeredfrom}-`date "+%Y%m%d%H%M"`.log
+    elif [[ $choice == "n" ]] ; then
+        userInputs
+    fi
+}
+
+function adduser {
+    cd ${opnDirPath}/ansible
+
+    if [[ $triggeredfrom == "updateuser" ]] ; then
+        ansible-playbook -i inventory main.yml -vv \
+            --extra-vars "nodes=${departmentName}" \
+            --extra-vars "uusername=${userName}" \
+            --tags removeuser
+    fi
+
+    ansible-playbook -i inventory main.yml -vv \
+        --extra-vars "nodes=${departmentName}" \
+        --extra-vars "uusername=${userName}" \
+        --extra-vars "userpwd=${userPassword}" \
+        --extra-vars "ugroups=${groupNames}" \
+        --tags createuser
+    cd ${opnDirPath}
+}
+
+function updatedb {
+    source $opnDirPath/database/${triggeredfrom} "${userName}" "${departmentName}" "${groupNames}" "${triggeredfrom}"
+}
+
+##########################################################################################################
+
+heading="$1"
+inventoryPath="$2"
+triggeredfrom="$3"
+
+header
+configs
+userInputs
+userConfirmation
+updatedb

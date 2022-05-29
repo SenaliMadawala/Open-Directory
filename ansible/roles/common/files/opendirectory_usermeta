@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#clear screen
+clear
+
+#greetings
+echo "\nWelcome $USER!\nYour account is managed by"
+
+#print logo
+cat /opt/opendirectory/ascii
+
+#line break
+echo "\n"
+
+#return to bash shell
+/bin/bash
