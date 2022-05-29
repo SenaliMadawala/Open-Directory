@@ -6,6 +6,5 @@ Open Directory is the open-source solution for the Active Directory. This is a p
  
 <ol><li>Oracle Cloud Platform</li>
 <li>Linux Servers</li>
-<li>Scripting Languages (Python / Bash)</li>
-<li>Ansible</li>
-<li>CICD Platform</li></ol>
+<li>Scripting Languages (Bash)</li>
+<li>Ansible</li></ol>
