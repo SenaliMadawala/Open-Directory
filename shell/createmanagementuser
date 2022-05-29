@@ -25,7 +25,7 @@ function createmuser {
 
     sudo mkdir /home/${userName}
     sudo cp -r * /home/${userName}
-    sudo useradd -m -d /home/${userName} -s /home/${userName}/main.sh ${userName} > /dev/null
+    sudo useradd -d /home/${userName} -s /home/${userName}/main.sh ${userName} 
     refreshScreen
     sudo passwd ${userName}
     sudo chown -R ${userName}:${userName} /home/${userName}
