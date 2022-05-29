@@ -18,6 +18,14 @@ function viewdetails {
     echo -e "${item}: ${result}\n"
 }
 
+function userConfirmation {
+    tput cup 11 10
+    tput bold
+    tput setaf 1
+    read -n 1 -p "Press any key to continue" choice
+    tput sgr0
+}
+
 ##########################################################################################################
 
 userName=$1
@@ -33,3 +41,5 @@ viewdetails department
 
 tput cup 9 12
 viewdetails usergroups
+
+userConfirmation

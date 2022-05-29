@@ -15,7 +15,7 @@ curl -s -X 'POST' \
   "usergroups": "'${usergroups}'"
 }'
 
-echo "\nReturn Code: $?"
+echo -e "\nReturn Code: $?"
 
 }
 

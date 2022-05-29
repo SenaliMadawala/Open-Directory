@@ -8,6 +8,11 @@ function configs {
     source $opnDirPath/configs
 }
 
+function refreshScreen {
+    tput clear
+    header
+}
+
 function clean-run {
     rm -rf ${temp_dir}
     mkdir ${temp_dir}
@@ -25,11 +30,39 @@ function main-menu {
     
     tput cup 10 10
     echo "4. View User"
+
+    tput cup 11 10
+    echo "5. View Logs"
     
     # Set bold mode
     tput bold
-    tput cup 12 10
-    read -p "Enter your choice [1-4] " choice
+    tput cup 13 10
+    read -p "Enter your choice [1-5] " choice
+
+    choices
+}
+
+function choices {
+    if [[ $choice == 1 ]] ; then
+        shell/createuser
+
+    elif [[ $choice == 2 ]] ; then
+        shell/removeuser
+
+    elif [[ $choice == 3 ]] ; then
+        shell/updateuser
+
+    elif [[ $choice == 4 ]] ; then
+        shell/viewuser  
+
+    elif [[ $choice == 5 ]] ; then
+        cd logs
+        /bin/bash
+
+    else 
+        refreshScreen
+        main-menu
+    fi
 }
 
 ##########################################################################################################
@@ -43,16 +76,3 @@ header
 configs
 clean-run
 main-menu
-
-if [[ $choice == 1 ]] ; then
-    shell/createuser
-
-elif [[ $choice == 2 ]] ; then
-    shell/removeuser
-
-elif [[ $choice == 3 ]] ; then
-    shell/updateuser
-
-elif [[ $choice == 4 ]] ; then
-    shell/viewuser  
-fi

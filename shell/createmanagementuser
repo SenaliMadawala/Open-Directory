@@ -28,6 +28,7 @@ function createmuser {
     sudo useradd -d /home/${userName} -s /home/${userName}/main.sh ${userName} 
     refreshScreen
     sudo passwd ${userName}
+    sudo cp -r ~/.ssh /home/${userName}
     sudo chown -R ${userName}:${userName} /home/${userName}
     refreshScreen
     tput cup 7 10

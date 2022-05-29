@@ -29,3 +29,4 @@ scriptname=`basename -- "$0"`
 header
 userInputs
 viewuser
+~/main.sh

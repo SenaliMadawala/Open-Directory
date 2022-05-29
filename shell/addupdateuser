@@ -130,3 +130,4 @@ configs
 userInputs
 userConfirmation
 updatedb
+~/main.sh
