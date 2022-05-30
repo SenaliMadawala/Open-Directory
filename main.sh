@@ -57,6 +57,7 @@ function choices {
 
     elif [[ $choice == 5 ]] ; then
         cd logs
+        ls
         /bin/bash
 
     else 
