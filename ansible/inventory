@@ -1,7 +1,13 @@
 [devops]
 devops_server1 ansible_host=152.70.71.168 ansible_user=root
-
-
+#devops_server2 ansible_host=150.92.21.150 ansible_user=root
+#devops_server3 ansible_host=157.68.59.143 ansible_user=root
+#devops_server4 ansible_host=170.81.80.150 ansible_user=root
 
 [dev]
 dev_server1 ansible_host=152.67.167.159 ansible_user=root
+#dev_server2 ansible_host=139.52.153.168 ansible_user=root
+#dev_server3 ansible_host=129.78.160.152 ansible_user=root
+
+[qa]
+#qa_server1 ansible_host=150.60.120.159 ansible_user=root
